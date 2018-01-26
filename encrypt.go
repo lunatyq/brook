@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/txthinking/ant"
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // IncrementNonce loves your compute to use Litter Endian

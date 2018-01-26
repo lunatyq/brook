@@ -1,0 +1,209 @@
+diff --git i/client.go w/client.go
+index 2ecd622..edf46dd 100644
+--- i/client.go
++++ w/client.go
+@@ -10,7 +10,7 @@ import (
+ 
+ 	cache "github.com/patrickmn/go-cache"
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Client
+diff --git i/encrypt.go w/encrypt.go
+index 0b8314c..f07506b 100644
+--- i/encrypt.go
++++ w/encrypt.go
+@@ -10,7 +10,7 @@ import (
+ 	"time"
+ 
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // IncrementNonce loves your compute to use Litter Endian
+diff --git i/init.go w/init.go
+index 926e573..d8b59af 100644
+--- i/init.go
++++ w/init.go
+@@ -2,7 +2,7 @@ package brook
+ 
+ import (
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ var Dial ant.Dialer = ant.DefaultDial
+diff --git i/relay.go w/relay.go
+index 738a16b..a01138c 100644
+--- i/relay.go
++++ w/relay.go
+@@ -7,7 +7,7 @@ import (
+ 	"time"
+ 
+ 	cache "github.com/patrickmn/go-cache"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Relay is stream relay server
+diff --git i/server.go w/server.go
+index 65093a2..fd964d6 100644
+--- i/server.go
++++ w/server.go
+@@ -7,7 +7,7 @@ import (
+ 	"time"
+ 
+ 	cache "github.com/patrickmn/go-cache"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Server
+diff --git i/socks5.go w/socks5.go
+index a9cd5f8..3ec992f 100644
+--- i/socks5.go
++++ w/socks5.go
+@@ -8,7 +8,7 @@ import (
+ 	"time"
+ 
+ 	cache "github.com/patrickmn/go-cache"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Socks5Server is the client of raw socks5 protocol
+@@ -99,6 +99,8 @@ func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Req
+ 	// reply ok and choose address according to cmd or something wrong
+ 	if r.Cmd == socks5.CmdConnect {
+ 		a, address, port, err := socks5.ParseAddress(client.TCPConn.LocalAddr().String())
++
++		log.Println("Address: ", address)
+ 		if err != nil {
+ 			return ErrorReply(r, c, err)
+ 		}
+@@ -115,7 +117,16 @@ func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Req
+ 		return nil
+ 	}
+ 	if r.Cmd == socks5.CmdUDP {
+-		caddr, err := r.UDP(c, x.Server.ServerAddr)
++		// x.Server.ServerAddr
++		// maciej
++		local_addr_string := client.TCPConn.LocalAddr().String()
++
++		local_addr, err := net.ResolveUDPAddr("udp", local_addr_string)
++		if err != nil {
++			return err
++		}
++
++		caddr, err := r.UDP(c, local_addr)
+ 		if err != nil {
+ 			return err
+ 		}
+diff --git i/socks5_middleman.go w/socks5_middleman.go
+index 07d2021..9d0b500 100644
+--- i/socks5_middleman.go
++++ w/socks5_middleman.go
+@@ -3,7 +3,7 @@ package brook
+ import (
+ 	"net"
+ 
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Socks5Middleman is a middleman who can intercept and handle request
+diff --git i/ssclient.go w/ssclient.go
+index 367e962..b476b44 100644
+--- i/ssclient.go
++++ w/ssclient.go
+@@ -12,7 +12,7 @@ import (
+ 
+ 	cache "github.com/patrickmn/go-cache"
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // SSClient
+diff --git i/ssserver.go w/ssserver.go
+index 6fd1ebe..057bbc9 100644
+--- i/ssserver.go
++++ w/ssserver.go
+@@ -11,7 +11,7 @@ import (
+ 
+ 	cache "github.com/patrickmn/go-cache"
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // SSServer
+diff --git i/stream_client.go w/stream_client.go
+index 90ce0ad..ceb7aae 100644
+--- i/stream_client.go
++++ w/stream_client.go
+@@ -12,7 +12,7 @@ import (
+ 
+ 	cache "github.com/patrickmn/go-cache"
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // StreamClient
+diff --git i/stream_server.go w/stream_server.go
+index 154c2ef..212007b 100644
+--- i/stream_server.go
++++ w/stream_server.go
+@@ -10,7 +10,7 @@ import (
+ 
+ 	cache "github.com/patrickmn/go-cache"
+ 	"github.com/txthinking/ant"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // StreamServer
+diff --git i/tunnel.go w/tunnel.go
+index 5ffd85a..e5d31ee 100644
+--- i/tunnel.go
++++ w/tunnel.go
+@@ -7,7 +7,7 @@ import (
+ 	"time"
+ 
+ 	cache "github.com/patrickmn/go-cache"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // Tunnel
+diff --git i/util.go w/util.go
+index ef79ed0..3072439 100644
+--- i/util.go
++++ w/util.go
+@@ -3,7 +3,7 @@ package brook
+ import (
+ 	"net"
+ 
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ func ErrorReply(r *socks5.Request, c *net.TCPConn, e error) error {
+diff --git i/white_socks5middleman.go w/white_socks5middleman.go
+index bff1c30..ed03003 100644
+--- i/white_socks5middleman.go
++++ w/white_socks5middleman.go
+@@ -4,7 +4,7 @@ import (
+ 	"net"
+ 
+ 	"github.com/txthinking/pac/blackwhite"
+-	"github.com/txthinking/socks5"
++	"./socks5"
+ )
+ 
+ // WhiteSocks5Middleman is a Socks5Middleman who only handle domain in white list

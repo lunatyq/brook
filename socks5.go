@@ -8,7 +8,7 @@ import (
 	"time"
 
 	cache "github.com/patrickmn/go-cache"
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // Socks5Server is the client of raw socks5 protocol
@@ -99,6 +99,8 @@ func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Req
 	// reply ok and choose address according to cmd or something wrong
 	if r.Cmd == socks5.CmdConnect {
 		a, address, port, err := socks5.ParseAddress(client.TCPConn.LocalAddr().String())
+
+		log.Println("Address: ", address)
 		if err != nil {
 			return ErrorReply(r, c, err)
 		}
@@ -115,7 +117,16 @@ func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Req
 		return nil
 	}
 	if r.Cmd == socks5.CmdUDP {
-		caddr, err := r.UDP(c, x.Server.ServerAddr)
+		// x.Server.ServerAddr
+		// maciej
+		local_addr_string := client.TCPConn.LocalAddr().String()
+
+		local_addr, err := net.ResolveUDPAddr("udp", local_addr_string)
+		if err != nil {
+			return err
+		}
+
+		caddr, err := r.UDP(c, local_addr)
 		if err != nil {
 			return err
 		}

@@ -3,7 +3,7 @@ package brook
 import (
 	"net"
 
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // Socks5Middleman is a middleman who can intercept and handle request

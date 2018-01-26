@@ -3,7 +3,7 @@ package brook
 import (
 	"net"
 
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 func ErrorReply(r *socks5.Request, c *net.TCPConn, e error) error {
