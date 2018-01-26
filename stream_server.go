@@ -10,7 +10,7 @@ import (
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/txthinking/ant"
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // StreamServer

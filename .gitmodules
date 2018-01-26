@@ -1,0 +1,3 @@
+[submodule "socks5"]
+	path = socks5
+	url = https://github.com/lunatyq/socks5

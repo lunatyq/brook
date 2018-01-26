@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/txthinking/pac/blackwhite"
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // WhiteSocks5Middleman is a Socks5Middleman who only handle domain in white list

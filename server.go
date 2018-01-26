@@ -7,7 +7,7 @@ import (
 	"time"
 
 	cache "github.com/patrickmn/go-cache"
-	"github.com/txthinking/socks5"
+	"./socks5"
 )
 
 // Server
